@@ -19,11 +19,19 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 
+export const cls = (...classNames: string[]): string => {
+    return classNames.join(" ");
+};
+
+const isTrue = true;
+
 export function InputCard() {
     return (
         <Card className="w-[350px]">
             <CardHeader>
-                <CardTitle>Create project</CardTitle>
+                <CardTitle
+                    className={cls(isTrue ? 'p-2' : 'p-4', 'bg-blue-300')}
+                >Create project</CardTitle>
                 <CardDescription>Deploy your new project in one-click.</CardDescription>
             </CardHeader>
             <CardContent>
