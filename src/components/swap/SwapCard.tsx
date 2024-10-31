@@ -58,6 +58,25 @@ export default function SwapCard() {
         setOfferList(offerList)
     }, [getHippoQuotes, sellAmount, setBuyAmount, setOfferList, toHippoOfferList])
 
+    const handleSwap = async () => {
+        if (!selectedOffer) {
+            console.error("No offer selected")
+            return
+        }
+
+        try {
+            if (selectedOffer.type === 'HIPPO') {
+                console.log('Selected type:', selectedOffer.type)
+                // 여기에 HIPPO 스왑 로직 추가
+            } else if (selectedOffer.type === 'PANORA') {
+                console.log('Selected type:', selectedOffer.type)
+                // 여기에 PANORA 스왑 로직 추가
+            }
+        } catch (error) {
+            console.error('Swap failed:', error)
+        }
+    }
+
     useEffect(()=>{
         handleGetQuotes()
     }, [sellAmount])
@@ -148,7 +167,13 @@ export default function SwapCard() {
                                     </div>
                                 </div>
 
-                                <Button variant="outline" className="mt-auto w-full bg-dark text-primary border-primary">Connect Wallet</Button>
+                                <Button
+                                    variant="outline"
+                                    className="bg-dark text-primary border-primary mt-auto w-full"
+                                    onClick={address ? handleSwap : handleConnect}
+                                >
+                                    {address ? 'Swap' : 'Connect Wallet'}
+                                </Button>
                             </div>
                         </CardContent>
                     </Card>
