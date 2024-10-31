@@ -5,11 +5,11 @@ import XHeader from '@/components/common/XHeader'
 import { useSwapStore } from '@/store/useSwapStore'
 import SwapCard from '@/components/swap/SwapCard'
 import SwapOfferCard from '@/components/swap/SwapOfferCard'
-import { WalletConnect } from '@/components/WalletConnect'
 
 export default function Swap() {
     const { buyToken } = useSwapStore()
     const [iframeSrc, setIframeSrc] = useState(`https://dexscreener.com/aptos/${buyToken?.dex}?embed=1&theme=dark&trades=0&info=0`)
+
 
     useEffect(() => {
         setIframeSrc(`https://dexscreener.com/aptos/${buyToken?.dex}?embed=1&theme=dark&trades=0&info=0`)

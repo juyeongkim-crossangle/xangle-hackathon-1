@@ -1,9 +1,9 @@
 import { AptosClient, HexString } from "aptos";
-import { TradeAggregator, MAINNET_CONFIG } from "@hippo-sdk/core";
+import { TradeAggregator, MAINNET_CONFIG } from "@manahippo/hippo-sdk";
 import { CoinInfo } from "@hippo-sdk/coin-list";
 
 // 1. Aggregator 생성
-export const createAggregator = async (fullNodeUrl?: string) => {
+export const createAggregator = async (fullNodeUrl?: 'https://fullnode.testnet.aptoslabs.com/') => {
   const netConf = { ...MAINNET_CONFIG };
   if (fullNodeUrl) {
     netConf.fullNodeUrl = fullNodeUrl;
@@ -20,7 +20,7 @@ export const createAggregator = async (fullNodeUrl?: string) => {
 };
 
 // 2. 견적 받기 관련 함수들
-export const getQuotes = {
+export const getHippoQuotesApis = {
   // 최적 견적 받기
   async getBestQuote(agg: TradeAggregator, inputAmt: number, xInfo: CoinInfo, yInfo: CoinInfo) {
     console.log("로컬에서 최적 견적 가져오는 중...");

@@ -1,20 +1,30 @@
 import { TOKENS, TokenTypes } from "@/constant/tokens.constant";
 import { create } from "zustand";
 
-interface SwapState {
+export interface SwapState {
   sellAmount: number;
   buyAmount: number;
   sellToken: TokenTypes | null;
   buyToken: TokenTypes | null;
   slippage: number;
+  offerList: Offer[]
 }
 
-interface SwapActions {
+export interface SwapActions {
   setSellAmount: (amount: number) => void;
   setBuyAmount: (amount: number) => void;
   setSellToken: (token: TokenTypes) => void;
   setBuyToken: (token: TokenTypes) => void;
   setSlippage: (value: number) => void;
+  setOfferList: (offers: Offer[]) => void;
+}
+
+export interface Offer {
+    name: string, 
+    amount: number, 
+    usdValue: number, 
+    gasFee: number, 
+    difference: 'BEST' | number
 }
 
 type SwapStore = SwapState & SwapActions;
@@ -24,13 +34,13 @@ export const useSwapStore = create<SwapStore>((set) => ({
   setSellAmount: (amount: number) => set({ sellAmount: amount }),
   buyAmount: 0,
   setBuyAmount: (amount: number) => set({ buyAmount: amount }),
-  sellToken: null,
+  sellToken: TOKENS[0],
   setSellToken: (token: TokenTypes) => set({ sellToken: token }),
-  buyToken: TOKENS[0],
+  buyToken: TOKENS[1],
   setBuyToken: (token: TokenTypes) => set({ buyToken: token }),
   slippage: 0,
   setSlippage: (value: number) => set({ slippage: value }),
 
-  offerList: []
-
+  offerList: [],
+  setOfferList: (offers: Offer[]) => set({ offerList: offers }),
 }));

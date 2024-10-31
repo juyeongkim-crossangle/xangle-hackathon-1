@@ -1,22 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useSwapStore } from "@/store/useSwapStore"
 
-const swapOptions = [
-    { name: 'Odos', amount: '49,361.1348', usdValue: '6,094.6', gasFee: '21.7276', difference: 'BEST' },
-    { name: 'CowSwap', amount: '49,094.2581', usdValue: '6,082.2', gasFee: '1.088', difference: '-0.20%' },
-    { name: 'KyberSwap', amount: '49,105.9624', usdValue: '6,080', gasFee: '4.7294', difference: '-0.24%' },
-    { name: 'ParaSwap', amount: '49,100.1287', usdValue: '6,079', gasFee: '5.0499', difference: '-0.26%' },
-]
-
 export default function SwapOfferCard() {
 
-    const { buyToken } = useSwapStore()
+    const { buyToken, offerList } = useSwapStore()
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
     const handleCardClick = (index: number) => {
         setActiveIndex(index);
     };
+
+    useEffect(()=>{
+        setActiveIndex(0)
+    }, [offerList])
 
     return (
         <Card className="bg-dark border-primary min-w-[405px]">
@@ -26,7 +23,7 @@ export default function SwapOfferCard() {
                                 fees.</p>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            {swapOptions.map((option, index) => (
+                            {offerList.map((option, index) => (
                                 <div
                                     key={index}
                                     onClick={() => handleCardClick(index)}

@@ -6,6 +6,7 @@ import { useSwapStore } from "@/store/useSwapStore"
 import { TOKENS } from "@/constant/tokens.constant"
 import { useWalletStore } from "@/store/walletStore"
 import { connectWallet, disconnectWallet } from "@/lib/account/petra"
+import { useHippo } from "@/hooks/useHippo"
 
 export default function SwapCard() {
 
@@ -14,10 +15,13 @@ export default function SwapCard() {
         buyAmount, setBuyAmount,
         sellToken, setSellToken,
         buyToken, setBuyToken,
-        slippage, setSlippage
+        slippage, setSlippage,
+        setOfferList
     } = useSwapStore()
 
     const { address, setAddress } = useWalletStore();
+    const {getHippoQuotes, toOfferList: toHippoOfferList} = useHippo()
+
 
     const handleConnect = async () => {
       const account = await connectWallet();
@@ -33,6 +37,15 @@ export default function SwapCard() {
       }
     };
 
+    const handleGetQuotes = async () =>{
+        const hippoQuotes = await getHippoQuotes()
+        console.log('hippoQuotes :',hippoQuotes)
+        if(hippoQuotes.length === 0) return
+        setBuyAmount(hippoQuotes[0].quote.outputUiAmt)
+        const offerList = [...toHippoOfferList(hippoQuotes)]
+        setOfferList(offerList)
+    }
+
     return (
         <Card className="bg-dark border-primary text-white min-w-[405px]">
                         <CardContent className="h-full p-4">
@@ -43,7 +56,8 @@ export default function SwapCard() {
                                         <Input
                                             type="text"
                                             value={sellAmount}
-                                            onChange={(e) => setSellAmount(e.target.value)}
+                                            onChange={(e) => {setSellAmount(e.target.value) 
+                                                handleGetQuotes()}}
                                             className="flex-grow"
                                         />
                                         <Select value={sellToken?.symbol}
@@ -68,7 +82,9 @@ export default function SwapCard() {
                                         <Input
                                             type="text"
                                             value={buyAmount}
-                                            onChange={(e) => setBuyAmount(e.target.value)}
+                                            onChange={(e) => {
+                                                setBuyAmount(e.target.value) 
+                                            }}
                                             className="flex-grow"
                                         />
                                         <Select value={buyToken?.symbol}
