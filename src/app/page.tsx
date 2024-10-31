@@ -16,7 +16,7 @@ export default function Swap() {
     }, [buyToken])
 
     return (
-        <div className="min-h-screen text-gray-100 p-4 flex flex-col items-center">
+        <div className="min-h-screen text-gray-100 p-4 flex flex-col items-center gap-4">
             <XHeader />
             <div className='flex gap-10 w-full'>
                 <div className="flex gap-10 justify-center w-full h-full">
@@ -29,6 +29,10 @@ export default function Swap() {
                 </div>
                 </div>
             </div>
+            <div className='w-full h-[1000px]'>
+                <iframe className='w-full h-full' src='https://aptos-explorer.xangle.io/coins' />
+            </div>
+            
             
         </div>
     )
