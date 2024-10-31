@@ -20,10 +20,10 @@ export default function Swap() {
             <XHeader />
             <div className='flex gap-10 w-full'>
                 <div className="flex gap-10 justify-center w-full">
-                <div className='w-1/2'>
+                <div className='w-2/3'>
                     <iframe className='w-full h-full' src={iframeSrc} />
                 </div>
-                <div className="flex gap-6 flex-wrap w-1/2 justify-center">
+                <div className="flex gap-4 flex-wrap w-1/3 justify-center">
                     <SwapCard />
                     <SwapOfferCard />
                 </div>

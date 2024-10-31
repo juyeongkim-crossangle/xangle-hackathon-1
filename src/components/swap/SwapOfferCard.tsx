@@ -7,7 +7,6 @@ const swapOptions = [
     { name: 'CowSwap', amount: '49,094.2581', usdValue: '6,082.2', gasFee: '1.088', difference: '-0.20%' },
     { name: 'KyberSwap', amount: '49,105.9624', usdValue: '6,080', gasFee: '4.7294', difference: '-0.24%' },
     { name: 'ParaSwap', amount: '49,100.1287', usdValue: '6,079', gasFee: '5.0499', difference: '-0.26%' },
-    { name: 'Matcha/0x', amount: '49,100.1287', usdValue: '6,078.9', gasFee: '5.1348', difference: '-0.26%' },
 ]
 
 export default function SwapOfferCard() {

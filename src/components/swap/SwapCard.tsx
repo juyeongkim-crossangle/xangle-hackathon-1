@@ -1,6 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Repeat } from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
 import { useSwapStore } from "@/store/useSwapStore"
@@ -61,12 +60,6 @@ export default function SwapCard() {
                                             </SelectContent>
                                         </Select>
                                     </div>
-                                </div>
-
-                                <div className="flex justify-center">
-                                    <Button variant="ghost" size="icon">
-                                        <Repeat className="h-4 w-4"/>
-                                    </Button>
                                 </div>
 
                                 <div className="space-y-2">
