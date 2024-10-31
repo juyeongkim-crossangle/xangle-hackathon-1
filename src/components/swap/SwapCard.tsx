@@ -55,7 +55,7 @@ export default function SwapCard() {
         const offerList = [
             ...(panoraQuotes ? toPanoraOfferList(panoraQuotes) : []),
             ...toHippoOfferList(hippoQuotes)?.slice(0, 3),
-        ]
+        ].sort((a,b)=> b.amount - a.amount)
 
         setOfferList(offerList)
     }, [getHippoQuotes, sellAmount, setBuyAmount, setOfferList, toHippoOfferList])

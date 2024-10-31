@@ -1,8 +1,9 @@
 import { AptosAccount, HexString } from 'aptos';
 import { Offer, useSwapStore } from "@/store/useSwapStore";
-import { createAggregator, getHippoQuotesApis, sendPayloadTxLocal } from '@/lib/hippo/hippo'
+import { createAggregator, executeSwap, getHippoQuotesApis, sendPayloadTxLocal } from '@/lib/hippo/hippo'
 import { useWalletStore } from "@/store/useWalletStore";
 import { createPayload } from "@/lib/hippo/hippo"
+import { useToast } from './use-toast';
 
 export type HippoQuote = {
     inputSymbol: string;
@@ -34,6 +35,7 @@ export const useHippo = () =>{
     const { sellAmount, sellToken, buyToken, selectedOffer } = useSwapStore()
     const { getAllQuotes } = getHippoQuotesApis
     const { address, publicKey } = useWalletStore()
+    const { toast } = useToast()
 
     function sortRoutesByBestCriteria(routes: RouteData[]): RouteData[] {
         return routes.sort((a, b) => {
@@ -79,17 +81,16 @@ export const useHippo = () =>{
     }
 
     async function swapHippo(){
-        console.log('publicKey :',publicKey)
-        if(!selectedOffer || !publicKey) return new Error('selected offer 필수')
-        const { client} = await createAggregator()
-        const payload = await createPayload.makeSwapPayload(selectedOffer.routeData, selectedOffer.amount)
-        console.log('payload :',payload)
-        const isSimul = false
-        const account = new AptosAccount(new HexString('0x1de5f4228624345c7bb0b772f894a35c7d7fa0dd2081c435a5dabf3e7dd16f1e')?.toUint8Array())
-
-        console.log('account :',account)
-        const result = await sendPayloadTxLocal(isSimul, client, account, payload, '100000')
-        console.log('result :',result)
+        await executeSwap.swapAndTransfer(sellToken?.symbol || '',
+             buyToken?.symbol || '',
+              sellAmount, address || '',
+               'true',
+                selectedOffer?.routeIndex,
+                 new AptosAccount(new HexString('0x1de5f4228624345c7bb0b772f894a35c7d7fa0dd2081c435a5dabf3e7dd16f1e').toUint8Array(),
+                  address || ''))
+        toast({
+            title: "Swap Success",
+          })
     }
 
     return {

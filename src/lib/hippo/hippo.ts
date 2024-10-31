@@ -4,7 +4,7 @@ import {getSimulationKeys, sendPayloadTx, simulatePayloadTx} from "@manahippo/mo
 import {AptosAccount, AptosClient, HexString, TxnBuilderTypes, Types} from "aptos";
 
 // 1. Aggregator 생성
-export const createAggregator = async (fullNodeUrl?: 'https://fullnode.mainnet.aptoslabs.com/v1') => {
+export const createAggregator = async (fullNodeUrl?: 'https://fullnode.mainnet.aptoslabs.com/') => {
   const netConf = { ...MAINNET_CONFIG };
   if (fullNodeUrl) {
     netConf.fullNodeUrl = fullNodeUrl;
@@ -71,7 +71,7 @@ export const getHippoQuotesApis = {
 export const createPayload = {
   // 기본 스왑 페이로드
   makeSwapPayload(quote: any, inputAmt: number) {
-    return quote.route.makeSwapPayload(inputAmt, 0);
+    return quote.route?.makeSwapPayload(inputAmt, 0);
   },
 
   // 고정 출력 스왑 페이로드
@@ -92,75 +92,49 @@ export const executeSwap = {
   async swapAndTransfer(
     fromSymbol: string,
     toSymbol: string,
-    inputUiAmt: string,
+    inputAmt: number,
     toAddress: string,
     simulation: string,
-    maxGas: string,
-    config: any
+    routeIdx: number,
+    account: any
   ) {
-    const { netConf, account, client } = config;
-    const inputAmt = parseFloat(inputUiAmt);
-    const toAddressHex = new HexString(toAddress);
-    const isSimulation = simulation === "true";
+    const agg = await createAggregator();
+    const netConf = agg.onchainAgg.netConf;
+    const client = agg.onchainAgg.client;
 
-    const agg = new TradeAggregator(client, netConf);
-    const xInfo = agg.coinListClient.getCoinInfoBySymbol(fromSymbol)[0];
-    const yInfo = agg.coinListClient.getCoinInfoBySymbol(toSymbol)[0];
+    const xInfo = agg.onchainAgg.coinListClient.getCoinInfoBySymbol(fromSymbol)[0];
+    const yInfo = agg.onchainAgg.coinListClient.getCoinInfoBySymbol(toSymbol)[0];
 
-    const quote = await getQuotes.getBestQuote(agg, inputAmt, xInfo, yInfo);
+    const quotes = await agg.onchainAgg.getQuotes(inputAmt, xInfo, yInfo);
+    const quote = quotes[routeIdx];
     if (!quote) return;
 
-    const payload = makeSwapAndTransferPayload(quote.route, inputAmt, toAddressHex);
-    await sendPayloadTxLocal(isSimulation, client, account, payload, maxGas);
-  },
+    const maxGas = quote.route.gasUnits;
 
-  // 로컬 라우트로 스왑
-  async swapLocalRoute(params: {
-    fromSymbol: string,
-    toSymbol: string,
-    inputUiAmt: string,
-    simulation: string,
-    routeIdx: string,
-    maxGas: string,
-    config: any
-  }) {
-    // 구현 내용
-  },
+    // payload 생성 전에 route 객체 확인
+    if (!quote.route || typeof quote.route.makeSwapPayload !== 'function') {
+      console.error('유효하지 않은 route 객체입니다');
+      return;
+    }
 
-  // API 라우트로 스왑
-  async swapApiRoute(params: {
-    fromSymbol: string,
-    toSymbol: string,
-    inputUiAmt: string,
-    simulation: string,
-    routeIdx: string,
-    maxGas: string,
-    config: any
-  }) {
-    // 구현 내용
+    try {
+      const payload = quote.route.makeSwapPayload(inputAmt, 0);
+      if (!payload) {
+        console.error('payload 생성 실패');
+        return;
+      }
+
+      const result = await sendPayloadTx(
+        client, 
+        account, 
+        payload as TxnBuilderTypes.TransactionPayloadEntryFunction, 
+        maxGas
+      );
+      console.log('트랜잭션 결과:', result);
+      return result;
+    } catch (error) {
+      console.error('스왑 실행 중 오류 발생:', error);
+      throw error;
+    }
   }
 };
-
-
-export const sendPayloadTxLocal = async (
-  simulation:boolean,
-  client: AptosClient,
-  account: AptosAccount,
-  payload: TxnBuilderTypes.TransactionPayloadEntryFunction | Types.TransactionPayload_EntryFunctionPayload,
-  maxGas: string
-)=>{
-  if (simulation) {
-      const simResult = await simulatePayloadTx(
-          client,
-          getSimulationKeys(account),
-          payload as TxnBuilderTypes.TransactionPayloadEntryFunction,
-          { maxGasAmount: parseInt(maxGas) }
-      );
-      console.log('simResult :',simResult)
-      return simResult.success
-  } else {
-      await sendPayloadTx(client, account, payload as TxnBuilderTypes.TransactionPayloadEntryFunction, {
-          maxGasAmount: parseInt(maxGas)
-      });
-  }
-}
