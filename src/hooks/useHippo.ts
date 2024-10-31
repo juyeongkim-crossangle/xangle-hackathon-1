@@ -60,10 +60,11 @@ export const useHippo = () =>{
     function toOfferList(routes: RouteData[]): Offer[]{
         return routes.map((route)=>({
             name: route.quote.outputSymbol,
-            amount: route.quote.outputUiAmt,
-            usdValue: route.quote.avgPrice,
-            gasFee: route.quote.gasUnits,
-            difference: 'BEST'
+            amount: route.quote.outputUiAmt, // 수량
+            usdValue: Math.floor(route.quote.avgPrice * route.quote.outputUiAmt) , // 가격
+            gasFee: Math.floor(route.quote.gasUnits), //TODO: 가스유닛 * 가스 가격으로 수정해야함
+            difference: 'BEST',
+            type: 'HIPPO'
         }))
     }
 

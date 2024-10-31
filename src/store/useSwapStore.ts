@@ -8,6 +8,7 @@ export interface SwapState {
   buyToken: TokenTypes | null;
   slippage: number;
   offerList: Offer[]
+  selectedOffer: Offer | null
 }
 
 export interface SwapActions {
@@ -17,6 +18,7 @@ export interface SwapActions {
   setBuyToken: (token: TokenTypes) => void;
   setSlippage: (value: number) => void;
   setOfferList: (offers: Offer[]) => void;
+  setSelectedOffer: (offer: Offer) => void
 }
 
 export interface Offer {
@@ -25,6 +27,7 @@ export interface Offer {
     usdValue: number, 
     gasFee: number, 
     difference: 'BEST' | number
+    type: 'HIPPO' | 'PANORA'
 }
 
 type SwapStore = SwapState & SwapActions;
@@ -43,4 +46,7 @@ export const useSwapStore = create<SwapStore>((set) => ({
 
   offerList: [],
   setOfferList: (offers: Offer[]) => set({ offerList: offers }),
+
+  selectedOffer: null,
+  setSelectedOffer: (offer: Offer) => set({selectedOffer: offer})
 }));

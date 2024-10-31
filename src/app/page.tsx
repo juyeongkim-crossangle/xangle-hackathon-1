@@ -27,9 +27,6 @@ export default function Swap() {
                     <SwapCard />
                     <SwapOfferCard />
                 </div>
-                {/* <div>
-                    <WalletConnect />
-                </div> */}
                 </div>
             </div>
             

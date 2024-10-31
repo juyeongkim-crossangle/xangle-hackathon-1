@@ -8,7 +8,7 @@ import { useWalletStore } from "@/store/useWalletStore"
 import { connectWallet, disconnectWallet } from "@/lib/account/petra"
 import { useHippo } from "@/hooks/useHippo"
 import { usePanora } from "@/hooks/usePanora"
-import { useCallback, useEffect, useRef } from "react"
+import { useCallback, useEffect } from "react"
 
 export default function SwapCard() {
 
@@ -18,7 +18,7 @@ export default function SwapCard() {
         sellToken, setSellToken,
         buyToken, setBuyToken,
         slippage, setSlippage,
-        setOfferList
+        setOfferList, selectedOffer
     } = useSwapStore()
 
     const { address, setAddress } = useWalletStore();
@@ -49,14 +49,11 @@ export default function SwapCard() {
             setBuyAmount(0)
             return
         }
-        setBuyAmount(hippoQuotes[0].quote.outputUiAmt)
 
         const offerList = [
             ...toHippoOfferList(hippoQuotes),
             ...(panoraQuotes ? toPanoraOfferList(panoraQuotes) : [])
         ].sort((a, b) => b.amount - a.amount)
-
-        console.log('offerList :',offerList)
 
         setOfferList(offerList)
     }, [getHippoQuotes, sellAmount, setBuyAmount, setOfferList, toHippoOfferList])
@@ -64,6 +61,11 @@ export default function SwapCard() {
     useEffect(()=>{
         handleGetQuotes()
     }, [sellAmount])
+
+    useEffect(()=>{
+        if(!selectedOffer) return
+        setBuyAmount(selectedOffer.amount)
+    }, [selectedOffer, setBuyAmount])
 
     return (
         <Card className="bg-dark border-primary text-white min-w-[405px]">

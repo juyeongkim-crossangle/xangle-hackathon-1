@@ -4,16 +4,18 @@ import { useSwapStore } from "@/store/useSwapStore"
 
 export default function SwapOfferCard() {
 
-    const { buyToken, offerList } = useSwapStore()
+    const { buyToken, offerList, setSelectedOffer } = useSwapStore()
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
     const handleCardClick = (index: number) => {
         setActiveIndex(index);
+        setSelectedOffer(offerList[index])
     };
 
     useEffect(()=>{
         setActiveIndex(0)
-    }, [offerList])
+        setSelectedOffer(offerList[0])
+    }, [offerList, setSelectedOffer])
 
     return (
         <Card className="bg-dark border-primary min-w-[405px]">
@@ -36,10 +38,10 @@ export default function SwapOfferCard() {
                                         <div className="text-sm text-gray-400">≈ ${option.usdValue} after gas fees</div>
                                     </div>
                                     <div className="text-right">
-                                        <div className="text-sm">${option.gasFee} via {option.name}</div>
+                                        <div className="text-sm">{option.gasFee} fee amount</div>
                                         <div
-                                            className={`text-sm ${option.difference === 'BEST' ? 'text-green-400' : 'text-red-400'}`}>
-                                            {option.difference}
+                                            className={`text-sm ${option.type === 'HIPPO' ? 'text-green-400' : 'text-red-400'}`}>
+                                            {option.type}
                                         </div>
                                     </div>
                                 </div>

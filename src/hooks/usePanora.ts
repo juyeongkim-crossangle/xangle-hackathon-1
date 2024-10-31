@@ -37,7 +37,7 @@ export const usePanora = () => {
             chainId: "1",
             fromTokenAddress: sellToken?.ca,
             toTokenAddress: buyToken?.ca,
-            fromTokenAmount: sellAmount.toString(),
+            fromTokenAmount: sellAmount,
             toWalletAddress: address || "",
             slippagePercentage: "1",
             integratorFeeAddress: address || "",
@@ -63,7 +63,8 @@ export const usePanora = () => {
             usdValue: parseFloat(quote.toTokenAmountUSD),
             gasFee: parseFloat(quote.feeAmount),
             difference: 'BEST',
-            priceImpact: parseFloat(quote.priceImpact)
+            priceImpact: parseFloat(quote.priceImpact),
+            type: 'PANORA'
         }));
     }
 
