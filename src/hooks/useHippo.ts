@@ -62,7 +62,7 @@ export const useHippo = () =>{
             name: route.quote.outputSymbol,
             amount: route.quote.outputUiAmt, // 수량
             usdValue: Math.floor(route.quote.avgPrice * route.quote.outputUiAmt) , // 가격
-            gasFee: Math.floor(route.quote.gasUnits), //TODO: 가스유닛 * 가스 가격으로 수정해야함
+            gasFee: Math.floor(route.quote.gasUnits),
             difference: 'BEST',
             type: 'HIPPO'
         }))

@@ -44,7 +44,8 @@ export default function SwapCard() {
     const handleGetQuotes = useCallback(async () => {
         const hippoQuotes = await getHippoQuotes()
         const panoraQuotes = await getPanoraQuotes()
-        if(hippoQuotes.length === 0) {
+
+        if(hippoQuotes.length === 0 && !panoraQuotes) {
             setOfferList([])
             setBuyAmount(0)
             return
@@ -59,8 +60,9 @@ export default function SwapCard() {
     }, [getHippoQuotes, sellAmount, setBuyAmount, setOfferList, toHippoOfferList])
 
     useEffect(()=>{
+        setOfferList([])
         handleGetQuotes()
-    }, [sellAmount])
+    }, [sellAmount, buyToken])
 
     useEffect(()=>{
         if(!selectedOffer) return

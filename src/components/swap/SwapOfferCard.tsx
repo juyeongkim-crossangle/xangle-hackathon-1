@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useSwapStore } from "@/store/useSwapStore"
+import { Skeleton } from '@/components/ui/skeleton'
 
 export default function SwapOfferCard() {
 
@@ -25,27 +26,35 @@ export default function SwapOfferCard() {
                                 fees.</p>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            {offerList.map((option, index) => (
-                                <div
-                                    key={index}
-                                    onClick={() => handleCardClick(index)}
-                                    className={`flex items-center justify-between p-3 rounded-lg cursor-pointer text-white ${
-                                        activeIndex === index ? 'bg-background border border-primary' : 'bg-dark/20'
-                                    }`}
-                                >
-                                    <div>
-                                        <div className="font-bold">{option.amount} {buyToken?.symbol}</div>
-                                        <div className="text-sm text-gray-400">≈ ${option.usdValue} after gas fees</div>
-                                    </div>
-                                    <div className="text-right">
-                                        <div className="text-sm">{option.gasFee} fee amount</div>
-                                        <div
-                                            className={`text-sm ${option.type === 'HIPPO' ? 'text-green-400' : 'text-red-400'}`}>
-                                            {option.type}
+                            {offerList.length === 0 ? (
+                                <div className="flex justify-center items-center w-full flex-col gap-4">
+                                     <Skeleton  />
+                                     <Skeleton  />
+                                     <Skeleton />
+                                </div>
+                            ) : (
+                                offerList.map((option, index) => (
+                                    <div
+                                        key={index}
+                                        onClick={() => handleCardClick(index)}
+                                        className={`flex items-center justify-between p-3 rounded-lg cursor-pointer text-white ${
+                                            activeIndex === index ? 'bg-background border border-primary' : 'bg-dark/20'
+                                        }`}
+                                    >
+                                        <div>
+                                            <div className="font-bold">{option.amount} {buyToken?.symbol}</div>
+                                            <div className="text-sm text-gray-400">≈ ${option.usdValue} after gas fees</div>
+                                        </div>
+                                        <div className="text-right">
+                                            <div className="text-sm">{option.gasFee} fee amount</div>
+                                            <div
+                                                className={`text-sm ${option.type === 'HIPPO' ? 'text-green-400' : 'text-red-400'}`}>
+                                                {option.type}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            ))}
+                                ))
+                            )}
                         </CardContent>
                     </Card>
     )
