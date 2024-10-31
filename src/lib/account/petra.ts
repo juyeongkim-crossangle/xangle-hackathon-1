@@ -6,49 +6,49 @@ interface PetraWallet {
 }
 
 interface Window {
-  aptos?: PetraWallet;
+  aptos?: PetraWallet
 }
 
 // Petra 지갑 가져오기
 export const getAptosWallet = (): PetraWallet | null => {
   if (typeof window !== 'undefined' && window.aptos) {
-    return window.aptos;
+    return window.aptos
   }
-  return null;
+  return null
 };
 
 // 지갑 연결 함수
 export const connectWallet = async (): Promise<{ address: string } | null> => {
   try {
-    const wallet = getAptosWallet();
+    const wallet = getAptosWallet()
 
     if (!wallet) {
-      window.open('https://petra.app/', '_blank');
-      return null;
+      window.open('https://petra.app/', '_blank')
+      return null
     }
 
-    const response = await wallet.connect();
-    const account = await wallet.account();
+    const response = await wallet.connect()
+    const account = await wallet.account()
     
     console.log('wallet :',wallet)
 
-    return account;
+    return account
   } catch (error) {
-    console.error('지갑 연결 실패:', error);
-    return null;
+    console.error('지갑 연결 실패:', error)
+    return null
   }
 };
 
 // 지갑 연결 해제 함수
 export const disconnectWallet = async (): Promise<boolean> => {
   try {
-    const wallet = getAptosWallet();
-    if (!wallet) return false;
+    const wallet = getAptosWallet()
+    if (!wallet) return false
 
-    await wallet.disconnect();
-    return true;
+    await wallet.disconnect()
+    return true
   } catch (error) {
-    console.error('지갑 연결 해제 실패:', error);
-    return false;
+    console.error('지갑 연결 해제 실패:', error)
+    return false
   }
 }; 
