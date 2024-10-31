@@ -52,7 +52,7 @@ export default function SwapCard() {
         }
 
         const offerList = [
-            ...toHippoOfferList(hippoQuotes),
+            ...toHippoOfferList(hippoQuotes).slice(0, 5),
             ...(panoraQuotes ? toPanoraOfferList(panoraQuotes) : [])
         ].sort((a, b) => b.amount - a.amount)
 
