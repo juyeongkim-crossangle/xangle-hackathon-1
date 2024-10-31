@@ -1,4 +1,4 @@
-import { TokenTypes } from "@/constant/tokens.constant";
+import { TOKENS, TokenTypes } from "@/constant/tokens.constant";
 import { create } from "zustand";
 
 interface SwapState {
@@ -26,8 +26,11 @@ export const useSwapStore = create<SwapStore>((set) => ({
   setBuyAmount: (amount: number) => set({ buyAmount: amount }),
   sellToken: null,
   setSellToken: (token: TokenTypes) => set({ sellToken: token }),
-  buyToken: null,
+  buyToken: TOKENS[0],
   setBuyToken: (token: TokenTypes) => set({ buyToken: token }),
   slippage: 0,
   setSlippage: (value: number) => set({ slippage: value }),
+
+  offerList: []
+
 }));

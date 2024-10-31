@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useSwapStore } from "@/store/useSwapStore"
 
@@ -10,20 +11,30 @@ const swapOptions = [
 ]
 
 export default function SwapOfferCard() {
-    
+
     const { buyToken } = useSwapStore()
+    const [activeIndex, setActiveIndex] = useState<number | null>(null);
+
+    const handleCardClick = (index: number) => {
+        setActiveIndex(index);
+    };
 
     return (
-        <Card className="bg-gray-800 border-gray-700">
+        <Card className="bg-dark border-primary min-w-[405px]">
                         <CardHeader>
-                            <CardTitle className="text-lg">Select a route to perform a swap</CardTitle>
+                            <CardTitle className="text-lg text-white">Select a route to perform a swap</CardTitle>
                             <p className="text-sm text-gray-400">Best route is selected based on net output after gas
                                 fees.</p>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             {swapOptions.map((option, index) => (
-                                <div key={index}
-                                     className="flex items-center justify-between p-3 bg-gray-700 rounded-lg">
+                                <div
+                                    key={index}
+                                    onClick={() => handleCardClick(index)}
+                                    className={`flex items-center justify-between p-3 rounded-lg cursor-pointer text-white ${
+                                        activeIndex === index ? 'bg-background border border-primary' : 'bg-dark/20'
+                                    }`}
+                                >
                                     <div>
                                         <div className="font-bold">{option.amount} {buyToken?.symbol}</div>
                                         <div className="text-sm text-gray-400">≈ ${option.usdValue} after gas fees</div>

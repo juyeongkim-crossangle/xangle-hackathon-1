@@ -1,7 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Switch } from "@/components/ui/switch"
+import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Settings, Repeat } from 'lucide-react'
+import { Repeat } from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
 import { useSwapStore } from "@/store/useSwapStore"
@@ -27,37 +26,18 @@ export default function SwapCard() {
         setAddress(account.address);
       }
     };
-  
+
     const handleDisconnect = async () => {
       const success = await disconnectWallet();
       if (success) {
         setAddress(null);
       }
     };
-    
-    return (
-        <Card className="bg-gray-800 border-gray-700">
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Chain</CardTitle>
-                            <div className="flex items-center space-x-2">
-                                <Switch/>
-                                <span className="text-sm text-gray-400">Hide IP</span>
-                                <Button variant="ghost" size="icon">
-                                    <Settings className="h-4 w-4"/>
-                                </Button>
-                            </div>
-                        </CardHeader>
-                        <CardContent>
-                            <Select defaultValue="ethereum">
-                                <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Select chain"/>
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="ethereum">Ethereum</SelectItem>
-                                </SelectContent>
-                            </Select>
 
-                            <div className="space-y-4 mt-4">
+    return (
+        <Card className="bg-dark border-primary text-white min-w-[405px]">
+                        <CardContent className="h-full p-4">
+                            <div className="flex flex-col gap-4 h-full">
                                 <div className="space-y-2">
                                     <label className="text-sm">You sell</label>
                                     <div className="flex items-center space-x-2">
@@ -137,13 +117,7 @@ export default function SwapCard() {
                                     </div>
                                 </div>
 
-                                <Button 
-                                    variant="outline" 
-                                    className="bg-blue-500 text-white w-full" 
-                                    onClick={address ? handleDisconnect : handleConnect}
-                                > 
-                                    {address ? 'Disconnect Wallet' : 'Connect Wallet'}
-                                </Button>
+                                <Button variant="outline" className="mt-auto w-full bg-dark text-primary border-primary">Connect Wallet</Button>
                             </div>
                         </CardContent>
                     </Card>

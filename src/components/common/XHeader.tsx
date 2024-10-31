@@ -14,7 +14,7 @@ export default function XHeader() {
         setAddress(account.address);
       }
     };
-  
+
     const handleDisconnect = async () => {
       const success = await disconnectWallet();
       if (success) {
@@ -22,18 +22,18 @@ export default function XHeader() {
       }
     };
 
-    
+
     return (
-        <header className="flex justify-between items-center mb-8">
+        <header className="flex justify-between items-center mb-8 w-full">
         <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-blue-500 rounded-full"></div>
-            <span className="text-xl font-bold">LlamaSwap</span>
+            <img src="/logo.png" alt="XaasSwap Logo" className="w-6 h-6" />
+            <span className="text-xl font-bold">XaasSwap</span>
         </div>
-        <Button 
-            variant="outline" 
-            className="bg-blue-500 text-white" 
+        <Button
+            variant="outline"
+            className="bg-dark text-primary border-primary"
             onClick={address ? handleDisconnect : handleConnect}
-        > 
+        >
             {address ? 'Disconnect Wallet' : 'Connect Wallet'}
         </Button>
         </header>
