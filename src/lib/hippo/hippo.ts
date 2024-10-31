@@ -91,14 +91,17 @@ export const executeSwap = {
   async swapAndTransfer(
     fromSymbol: string,
     toSymbol: string,
-    inputUiAmt: string,
+    inputAmt: number,
     toAddress: string,
     simulation: string,
-    maxGas: string,
-    config: any
+    routeIdx: number,
+    account: any
   ) {
-    const { netConf, account, client } = config;
-    const inputAmt = parseFloat(inputUiAmt);
+    const {defaultAgg} = await createAggregator()
+
+    const netConf = defaultAgg.netConf;
+    const client = defaultAgg.client;
+
     const toAddressHex = new HexString(toAddress);
     const isSimulation = simulation === "true";
 
@@ -106,36 +109,14 @@ export const executeSwap = {
     const xInfo = agg.coinListClient.getCoinInfoBySymbol(fromSymbol)[0];
     const yInfo = agg.coinListClient.getCoinInfoBySymbol(toSymbol)[0];
 
-    const quote = await getQuotes.getBestQuote(agg, inputAmt, xInfo, yInfo);
+    const quotes = await agg.getQuotes(inputAmt, xInfo, yInfo);
+    const quote = quotes[routeIdx];
     if (!quote) return;
 
-    const payload = makeSwapAndTransferPayload(quote.route, inputAmt, toAddressHex);
-    await sendPayloadTxLocal(isSimulation, client, account, payload, maxGas);
-  },
+    const maxGas = quote.route.gasUnits;
 
-  // 로컬 라우트로 스왑
-  async swapLocalRoute(params: {
-    fromSymbol: string,
-    toSymbol: string,
-    inputUiAmt: string,
-    simulation: string,
-    routeIdx: string,
-    maxGas: string,
-    config: any
-  }) {
-    // 구현 내용
-  },
-
-  // API 라우트로 스왑
-  async swapApiRoute(params: {
-    fromSymbol: string,
-    toSymbol: string,
-    inputUiAmt: string,
-    simulation: string,
-    routeIdx: string,
-    maxGas: string,
-    config: any
-  }) {
-    // 구현 내용
+    const payload = createPayload.makeSwapPayload(quote.route, inputAmt);
+    const result = await agg.sendPayloadTxLocal(isSimulation, client, account, payload, maxGas);
+    console.log(result);
   }
 };

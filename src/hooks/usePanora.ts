@@ -34,7 +34,7 @@ export const usePanora = () => {
     const getPanoraQuotes = async () => {
         if (sellAmount <= 0) return
 
-        try {                   
+        try {          
           const response = await client.ExactInSwapQuote({
             chainId: "1",
             fromTokenAddress: sellToken?.ca,

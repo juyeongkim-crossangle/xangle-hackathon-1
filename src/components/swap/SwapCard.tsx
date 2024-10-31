@@ -9,9 +9,10 @@ import { connectWallet, disconnectWallet } from "@/lib/account/petra"
 import { useHippo } from "@/hooks/useHippo"
 import { usePanora } from "@/hooks/usePanora"
 import { useCallback, useEffect } from "react"
+import { executeSwap } from "@/lib/hippo/hippo"
 
 export default function SwapCard() {
-
+    
     const {
         sellAmount, setSellAmount,
         buyAmount, setBuyAmount,
@@ -22,14 +23,14 @@ export default function SwapCard() {
     } = useSwapStore()
 
     const { address, setAddress } = useWalletStore();
-    const { getHippoQuotes, toOfferList: toHippoOfferList } = useHippo()
+    const { getHippoQuotes, toOfferList: toHippoOfferList,  } = useHippo()
     const { getPanoraQuotes, toOfferList: toPanoraOfferList } = usePanora()
 
 
     const handleConnect = async () => {
       const account = await connectWallet();
       if (account) {
-        setAddress(account.address);
+        setAddress(account.address);        
       }
     };
 
@@ -69,6 +70,7 @@ export default function SwapCard() {
             if (selectedOffer.type === 'HIPPO') {
                 console.log('Selected type:', selectedOffer.type)
                 // 여기에 HIPPO 스왑 로직 추가
+                await executeSwap.swapAndTransfer(sellToken?.symbol || "", buyToken?.symbol || "", sellAmount, address || "", "true", selectedOffer.routeIndex, account)
             } else if (selectedOffer.type === 'PANORA') {
                 console.log('Selected type:', selectedOffer.type)
                 // 여기에 PANORA 스왑 로직 추가
