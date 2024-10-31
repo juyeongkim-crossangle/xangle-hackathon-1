@@ -36,14 +36,20 @@ export const usePanora = () => {
     const getPanoraQuotes = async () => {
         if (sellAmount <= 0) return
 
-        try {                   
+        try {                 
+                 // @ts-ignore  
           const response = await client.ExactInSwapQuote({
             chainId: "1",
+                   // @ts-ignore
             fromTokenAddress: sellToken?.ca,
+                   // @ts-ignore
             toTokenAddress: buyToken?.ca,
+                   // @ts-ignore
             fromTokenAmount: sellAmount,
+                   // @ts-ignore
             toWalletAddress: address || "",
             slippagePercentage: "1",
+                   // @ts-ignore
             integratorFeeAddress: address || "",
             integratorFeePercentage: "1",
             getTransactionData: "rawTransaction"
@@ -60,7 +66,7 @@ export const usePanora = () => {
         if (!response.quotes || response.quotes.length === 0) {
             return [];
         }
-
+       // @ts-ignore
         return response.quotes.map((quote, index) => ({
             name: buyToken?.symbol || "",
             amount: parseFloat(quote.toTokenAmount),
@@ -78,15 +84,21 @@ export const usePanora = () => {
       const response = await client.ExactInSwap(
         {
           chainId: "1",
+                 // @ts-ignore
           fromTokenAddress: sellToken?.ca,
+                 // @ts-ignore
           toTokenAddress: buyToken?.ca,
+                 // @ts-ignore
           fromTokenAmount: sellAmount,
+                 // @ts-ignore
           toWalletAddress: address,
+                 // @ts-ignore
           slippagePercentage: "1",
+                 // @ts-ignore
           integratorFeeAddress: address,
           integratorFeePercentage: "1",
         },
-        "0x1de5f4228624345c7bb0b772f894a35c7d7fa0dd2081c435a5dabf3e7dd16f1e"
+        "0xe68115cc0ca110424d128ac716bd11b9da9e902c2228be554ce0f1adffff0bfb"
       )
       toast({
         title: "Swap Success",

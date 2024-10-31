@@ -1,4 +1,5 @@
 import { TradeAggregator, MAINNET_CONFIG } from "@manahippo/hippo-sdk";
+// @ts-ignore
 import { CoinInfo } from "@hippo-sdk/coin-list";
 import {getSimulationKeys, sendPayloadTx, simulatePayloadTx} from "@manahippo/move-to-ts";
 import {AptosAccount, AptosClient, HexString, TxnBuilderTypes, Types} from "aptos";

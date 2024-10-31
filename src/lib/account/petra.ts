@@ -11,7 +11,9 @@ interface Window {
 
 // Petra 지갑 가져오기
 export const getAptosWallet = (): PetraWallet | null => {
+  // @ts-ignore
   if (typeof window !== 'undefined' && window.aptos) {
+    // @ts-ignore
     return window.aptos
   }
   return null

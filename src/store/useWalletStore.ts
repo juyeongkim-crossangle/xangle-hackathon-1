@@ -9,14 +9,16 @@ interface WalletState {
 }
 
 export const useWalletStore = create<WalletState>((set) => ({
-  address: localStorage.getItem('walletAddress'),
+  address: typeof window !== 'undefined' ? localStorage.getItem('walletAddress') : null,
   setAddress: (address: string | null) => {
     set({ address });
 
-    if (address) {
-      localStorage.setItem('walletAddress', address);
-    } else {
-      localStorage.removeItem('walletAddress');
+    if (typeof window !== 'undefined') {
+      if (address) {
+        localStorage.setItem('walletAddress', address);
+      } else {
+        localStorage.removeItem('walletAddress');
+      }
     }
   },
 

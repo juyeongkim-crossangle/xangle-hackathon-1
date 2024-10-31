@@ -11,8 +11,7 @@ export default function XHeader() {
       const account = await connectWallet();
       if (account) {
     
-        setAddress(account.address);
-        setPublicKey(account.publicKey)
+        setAddress(account.address)
       }
     };
 

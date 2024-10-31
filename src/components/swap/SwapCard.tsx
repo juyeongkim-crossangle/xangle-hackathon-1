@@ -57,6 +57,8 @@ export default function SwapCard() {
             ...toHippoOfferList(hippoQuotes)?.slice(0, 3),
         ].sort((a,b)=> b.amount - a.amount)
 
+        
+        // @ts-ignore
         setOfferList(offerList)
     }, [getHippoQuotes, sellAmount, setBuyAmount, setOfferList, toHippoOfferList])
 
@@ -103,6 +105,7 @@ export default function SwapCard() {
                                             type="number"
                                             value={sellAmount}
                                             onChange={(e) => {
+                                                       // @ts-ignore
                                                 setSellAmount(e.target.value)
                                             }}
                                             className="flex-grow"
@@ -130,6 +133,7 @@ export default function SwapCard() {
                                             type="number"
                                             value={buyAmount}
                                             onChange={(e) => {
+                                                       // @ts-ignore
                                                 setBuyAmount(e.target.value)
                                             }}
                                             className="flex-grow"
@@ -166,6 +170,7 @@ export default function SwapCard() {
                                         <Input
                                             type="text"
                                             value={slippage}
+                                                   // @ts-ignore
                                             onChange={(e) => setSlippage(e.target.value)}
                                             className="w-16 text-center"
                                         />
