@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { connectWallet, disconnectWallet } from '@/lib/account/petra';
-import { useWalletStore } from '@/store/walletStore';
+import { useWalletStore } from '@/store/useWalletStore';
 
 
 export default function XHeader() {

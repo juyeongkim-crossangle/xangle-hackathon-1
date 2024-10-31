@@ -4,9 +4,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Input } from "@/components/ui/input"
 import { useSwapStore } from "@/store/useSwapStore"
 import { TOKENS } from "@/constant/tokens.constant"
-import { useWalletStore } from "@/store/walletStore"
+import { useWalletStore } from "@/store/useWalletStore"
 import { connectWallet, disconnectWallet } from "@/lib/account/petra"
 import { useHippo } from "@/hooks/useHippo"
+import { usePanora } from "@/hooks/usePanora"
 
 export default function SwapCard() {
 
@@ -20,7 +21,8 @@ export default function SwapCard() {
     } = useSwapStore()
 
     const { address, setAddress } = useWalletStore();
-    const {getHippoQuotes, toOfferList: toHippoOfferList} = useHippo()
+    const { getHippoQuotes, toOfferList: toHippoOfferList } = useHippo()
+    const { getPanoraQuotes, toOfferList: toPanoraOfferList } = usePanora()
 
 
     const handleConnect = async () => {
@@ -39,10 +41,20 @@ export default function SwapCard() {
 
     const handleGetQuotes = async () =>{
         const hippoQuotes = await getHippoQuotes()
+        const panoraQuotes = await getPanoraQuotes()
+
         console.log('hippoQuotes :',hippoQuotes)
+
         if(hippoQuotes.length === 0) return
         setBuyAmount(hippoQuotes[0].quote.outputUiAmt)
-        const offerList = [...toHippoOfferList(hippoQuotes)]
+        
+        const offerList = [
+            ...toHippoOfferList(hippoQuotes), 
+            ...(panoraQuotes ? toPanoraOfferList(panoraQuotes) : [])
+        ].sort((a, b) => b.amount - a.amount)
+        
+        console.log('offerList :',offerList)
+
         setOfferList(offerList)
     }
 
