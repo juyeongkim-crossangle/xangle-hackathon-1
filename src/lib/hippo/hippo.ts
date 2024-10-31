@@ -99,7 +99,6 @@ export const executeSwap = {
     account: any
   ) {
     const agg = await createAggregator();
-    const netConf = agg.onchainAgg.netConf;
     const client = agg.onchainAgg.client;
 
     const xInfo = agg.onchainAgg.coinListClient.getCoinInfoBySymbol(fromSymbol)[0];
