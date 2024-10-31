@@ -32,7 +32,9 @@ export const usePanora = () => {
     const client = new Panora(config);
 
     const getPanoraQuotes = async () => {
-        try {
+        if (sellAmount <= 0) return
+
+        try {                   
           const response = await client.ExactInSwapQuote({
             chainId: "1",
             fromTokenAddress: sellToken?.ca,
@@ -57,14 +59,15 @@ export const usePanora = () => {
             return [];
         }
 
-        return response.quotes.map((quote) => ({
+        return response.quotes.map((quote, index) => ({
             name: buyToken?.symbol || "",
             amount: parseFloat(quote.toTokenAmount),
             usdValue: parseFloat(quote.toTokenAmountUSD),
             gasFee: parseFloat(quote.feeAmount),
             difference: 'BEST',
             priceImpact: parseFloat(quote.priceImpact),
-            type: 'PANORA'
+            type: 'PANORA',
+            routeIndex: index
         }));
     }
 

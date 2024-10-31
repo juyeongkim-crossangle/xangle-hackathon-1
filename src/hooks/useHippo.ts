@@ -1,5 +1,6 @@
 import { Offer, useSwapStore } from "@/store/useSwapStore";
 import { createAggregator, getHippoQuotesApis } from '@/lib/hippo/hippo'
+import { useWalletStore } from "@/store/useWalletStore";
 
 export type HippoQuote = {
     inputSymbol: string;
@@ -22,10 +23,15 @@ export type RouteData = {
     innerStepQuotes: HippoQuote[];
 };
 
+const MAINNET_CONFIG = {
+    fullNodeUrl: "https://fullnode.mainnet.aptoslabs.com/v1",
+    // 기타 필요한 설정들...
+};
 
 export const useHippo = () =>{
     const { sellAmount, sellToken, buyToken } = useSwapStore()
     const { getAllQuotes } = getHippoQuotesApis
+    const { address } = useWalletStore()
 
     function sortRoutesByBestCriteria(routes: RouteData[]): RouteData[] {
         return routes.sort((a, b) => {
@@ -58,13 +64,14 @@ export const useHippo = () =>{
 
 
     function toOfferList(routes: RouteData[]): Offer[]{
-        return routes.map((route)=>({
+        return routes.map((route, index)=>({
             name: route.quote.outputSymbol,
             amount: route.quote.outputUiAmt, // 수량
             usdValue: Math.floor(route.quote.avgPrice * route.quote.outputUiAmt) , // 가격
             gasFee: Math.floor(route.quote.gasUnits),
             difference: 'BEST',
-            type: 'HIPPO'
+            type: 'HIPPO',
+            routeIndex: index
         }))
     }
 
