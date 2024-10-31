@@ -5,7 +5,7 @@ import XHeader from '@/components/common/XHeader'
 import { useSwapStore } from '@/store/useSwapStore'
 import SwapCard from '@/components/swap/SwapCard'
 import SwapOfferCard from '@/components/swap/SwapOfferCard'
-
+import { WalletConnect } from '@/components/WalletConnect'
 
 
 export default function Swap() {
@@ -28,6 +28,9 @@ export default function Swap() {
                 <div className="flex gap-6 flex-wrap w-2/3">
                     <SwapCard />
                     <SwapOfferCard />
+                </div>
+                <div>
+                    <WalletConnect />
                 </div>
             </div>
         </div>
