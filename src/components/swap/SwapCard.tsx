@@ -6,6 +6,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Input } from "@/components/ui/input"
 import { useSwapStore } from "@/store/useSwapStore"
 import { TOKENS } from "@/constant/tokens.constant"
+import { useWalletStore } from "@/store/walletStore"
+import { connectWallet, disconnectWallet } from "@/lib/account/petra"
 
 export default function SwapCard() {
 
@@ -16,6 +18,22 @@ export default function SwapCard() {
         buyToken, setBuyToken,
         slippage, setSlippage
     } = useSwapStore()
+
+    const { address, setAddress } = useWalletStore();
+
+    const handleConnect = async () => {
+      const account = await connectWallet();
+      if (account) {
+        setAddress(account.address);
+      }
+    };
+  
+    const handleDisconnect = async () => {
+      const success = await disconnectWallet();
+      if (success) {
+        setAddress(null);
+      }
+    };
     
     return (
         <Card className="bg-gray-800 border-gray-700">
@@ -119,7 +137,13 @@ export default function SwapCard() {
                                     </div>
                                 </div>
 
-                                <Button className="w-full bg-blue-500 hover:bg-blue-600">Connect Wallet</Button>
+                                <Button 
+                                    variant="outline" 
+                                    className="bg-blue-500 text-white w-full" 
+                                    onClick={address ? handleDisconnect : handleConnect}
+                                > 
+                                    {address ? 'Disconnect Wallet' : 'Connect Wallet'}
+                                </Button>
                             </div>
                         </CardContent>
                     </Card>
