@@ -61,8 +61,6 @@ export const useHippo = () =>{
             return sortRoutesByBestCriteria(result)
     }
 
-
-
     function toOfferList(routes: RouteData[]): Offer[]{
         return routes.map((route, index)=>({
             name: route.quote.outputSymbol,

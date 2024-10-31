@@ -26,8 +26,9 @@ export interface Offer {
     amount: number, 
     usdValue: number, 
     gasFee: number, 
-    difference: 'BEST' | number
-    type: 'HIPPO' | 'PANORA'
+    difference: 'BEST' | number,
+    type: 'HIPPO' | 'PANORA',
+    routeIndex: number
 }
 
 type SwapStore = SwapState & SwapActions;
