@@ -21,6 +21,7 @@ export const getAptosWallet = (): PetraWallet | null => {
 export const connectWallet = async (): Promise<{ address: string } | null> => {
   try {
     const wallet = getAptosWallet();
+
     if (!wallet) {
       window.open('https://petra.app/', '_blank');
       return null;
@@ -29,6 +30,8 @@ export const connectWallet = async (): Promise<{ address: string } | null> => {
     const response = await wallet.connect();
     const account = await wallet.account();
     
+    console.log('wallet :',wallet)
+
     return account;
   } catch (error) {
     console.error('지갑 연결 실패:', error);

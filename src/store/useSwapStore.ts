@@ -1,4 +1,5 @@
 import { TOKENS, TokenTypes } from "@/constant/tokens.constant";
+import { RouteData } from "@/hooks/useHippo";
 import { create } from "zustand";
 
 export interface SwapState {
@@ -28,6 +29,8 @@ export interface Offer {
     gasFee: number, 
     difference: 'BEST' | number
     type: 'HIPPO' | 'PANORA'
+    routeData?: RouteData
+    isSimul: boolean
 }
 
 type SwapStore = SwapState & SwapActions;

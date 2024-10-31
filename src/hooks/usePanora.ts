@@ -1,6 +1,7 @@
 import Panora, { PanoraConfig } from "@panoraexchange/swap-sdk"
 import { Offer, useSwapStore } from "@/store/useSwapStore"
 import { useWalletStore } from "@/store/useWalletStore"
+import { useToast } from "./use-toast";
 
 // export type PanoraQuote = {
 //     chainId: string;
@@ -24,6 +25,7 @@ export type PanoraQuote = {
 export const usePanora = () => {
     const { sellAmount, sellToken, buyToken } = useSwapStore()
     const { address } = useWalletStore()
+    const { toast } = useToast()
 
     const config: PanoraConfig = {
         apiKey: "a4^KV_EaTf4MW#ZdvgGKX#HUD^3IFEAOV_kzpIE^3BQGA8pDnrkT7JcIy#HNlLGi",
@@ -71,8 +73,30 @@ export const usePanora = () => {
         }));
     }
 
+
+    const swapPanora = async () => {
+      const response = await client.ExactInSwap(
+        {
+          chainId: "1",
+          fromTokenAddress: sellToken?.ca,
+          toTokenAddress: buyToken?.ca,
+          fromTokenAmount: sellAmount,
+          toWalletAddress: address,
+          slippagePercentage: "1",
+          integratorFeeAddress: address,
+          integratorFeePercentage: "1",
+        },
+        "0x1de5f4228624345c7bb0b772f894a35c7d7fa0dd2081c435a5dabf3e7dd16f1e"
+      )
+      toast({
+        title: "Swap Success",
+      })
+      console.log('response :',response)
+    }
+
     return {
         getPanoraQuotes,
-        toOfferList
+        toOfferList,
+        swapPanora
     }
 }

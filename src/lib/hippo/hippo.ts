@@ -1,9 +1,10 @@
-import { AptosClient, HexString } from "aptos";
 import { TradeAggregator, MAINNET_CONFIG } from "@manahippo/hippo-sdk";
 import { CoinInfo } from "@hippo-sdk/coin-list";
+import {getSimulationKeys, sendPayloadTx, simulatePayloadTx} from "@manahippo/move-to-ts";
+import {AptosAccount, AptosClient, HexString, TxnBuilderTypes, Types} from "aptos";
 
 // 1. Aggregator 생성
-export const createAggregator = async (fullNodeUrl?: 'https://fullnode.testnet.aptoslabs.com/') => {
+export const createAggregator = async (fullNodeUrl?: 'https://fullnode.mainnet.aptoslabs.com/v1') => {
   const netConf = { ...MAINNET_CONFIG };
   if (fullNodeUrl) {
     netConf.fullNodeUrl = fullNodeUrl;
@@ -139,3 +140,27 @@ export const executeSwap = {
     // 구현 내용
   }
 };
+
+
+export const sendPayloadTxLocal = async (
+  simulation:boolean,
+  client: AptosClient,
+  account: AptosAccount,
+  payload: TxnBuilderTypes.TransactionPayloadEntryFunction | Types.TransactionPayload_EntryFunctionPayload,
+  maxGas: string
+)=>{
+  if (simulation) {
+      const simResult = await simulatePayloadTx(
+          client,
+          getSimulationKeys(account),
+          payload as TxnBuilderTypes.TransactionPayloadEntryFunction,
+          { maxGasAmount: parseInt(maxGas) }
+      );
+      console.log('simResult :',simResult)
+      return simResult.success
+  } else {
+      await sendPayloadTx(client, account, payload as TxnBuilderTypes.TransactionPayloadEntryFunction, {
+          maxGasAmount: parseInt(maxGas)
+      });
+  }
+}

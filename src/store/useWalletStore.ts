@@ -3,6 +3,9 @@ import { create } from 'zustand';
 interface WalletState {
   address: string | null;
   setAddress: (address: string | null) => void;
+
+  publicKey: string | null;
+  setPublicKey: (publicKey: string ) => void;
 }
 
 export const useWalletStore = create<WalletState>((set) => ({
@@ -16,4 +19,7 @@ export const useWalletStore = create<WalletState>((set) => ({
       localStorage.removeItem('walletAddress');
     }
   },
+
+  publicKey: null,
+  setPublicKey: (key: string) => set({publicKey: key})
 })); 

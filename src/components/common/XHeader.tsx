@@ -5,13 +5,14 @@ import { useWalletStore } from '@/store/useWalletStore';
 
 
 export default function XHeader() {
-    const { address, setAddress } = useWalletStore();
+    const { address, setAddress, setPublicKey } = useWalletStore();
 
     const handleConnect = async () => {
       const account = await connectWallet();
       if (account) {
-        console.log('connect succes', account)
+    
         setAddress(account.address);
+        setPublicKey(account.publicKey)
       }
     };
 

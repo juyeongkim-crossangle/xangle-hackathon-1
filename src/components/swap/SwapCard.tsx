@@ -10,6 +10,7 @@ import { useHippo } from "@/hooks/useHippo"
 import { usePanora } from "@/hooks/usePanora"
 import { useCallback, useEffect } from "react"
 
+
 export default function SwapCard() {
 
     const {
@@ -22,8 +23,8 @@ export default function SwapCard() {
     } = useSwapStore()
 
     const { address, setAddress } = useWalletStore();
-    const { getHippoQuotes, toOfferList: toHippoOfferList } = useHippo()
-    const { getPanoraQuotes, toOfferList: toPanoraOfferList } = usePanora()
+    const { getHippoQuotes, toOfferList: toHippoOfferList, swapHippo } = useHippo()
+    const { getPanoraQuotes, toOfferList: toPanoraOfferList, swapPanora } = usePanora()
 
 
     const handleConnect = async () => {
@@ -52,9 +53,9 @@ export default function SwapCard() {
         }
 
         const offerList = [
-            ...toHippoOfferList(hippoQuotes).slice(0, 5),
-            ...(panoraQuotes ? toPanoraOfferList(panoraQuotes) : [])
-        ].sort((a, b) => b.amount - a.amount)
+            ...(panoraQuotes ? toPanoraOfferList(panoraQuotes) : []),
+            ...toHippoOfferList(hippoQuotes)?.slice(0, 3),
+        ]
 
         setOfferList(offerList)
     }, [getHippoQuotes, sellAmount, setBuyAmount, setOfferList, toHippoOfferList])
@@ -68,10 +69,13 @@ export default function SwapCard() {
         try {
             if (selectedOffer.type === 'HIPPO') {
                 console.log('Selected type:', selectedOffer.type)
+                swapHippo()
+                
                 // 여기에 HIPPO 스왑 로직 추가
             } else if (selectedOffer.type === 'PANORA') {
                 console.log('Selected type:', selectedOffer.type)
                 // 여기에 PANORA 스왑 로직 추가
+                swapPanora()
             }
         } catch (error) {
             console.error('Swap failed:', error)
