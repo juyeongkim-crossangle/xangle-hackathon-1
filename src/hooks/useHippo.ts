@@ -50,9 +50,9 @@ export const useHippo = () =>{
             const {defaultAgg} = await createAggregator()
             const xInfo = await defaultAgg.coinListClient.getCoinInfoBySymbol(sellToken?.symbol);
             const yInfo = await defaultAgg.coinListClient.getCoinInfoBySymbol(buyToken?.symbol);
-            console.log('xInfo :',xInfo)
-            console.log('yInfo :',yInfo)
-            console.log('defaultAgg :',defaultAgg)
+            // console.log('xInfo :',xInfo)
+            // console.log('yInfo :',yInfo)
+            // console.log('defaultAgg :',defaultAgg)
             const result = await getAllQuotes(defaultAgg, sellAmount, xInfo[0], yInfo[0])
             // const quote = await defaultAgg.getBestQuote(buyAmount, xInfo[0], yInfo[0]);
             return sortRoutesByBestCriteria(result)
