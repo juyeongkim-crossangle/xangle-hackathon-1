@@ -19,7 +19,7 @@ export default function Swap() {
         <div className="min-h-screen text-gray-100 p-4 flex flex-col items-center">
             <XHeader />
             <div className='flex gap-10 w-full'>
-                <div className="flex gap-10 justify-center w-full">
+                <div className="flex gap-10 justify-center w-full h-full">
                 <div className='w-2/3'>
                     <iframe className='w-full h-full' src={iframeSrc} />
                 </div>

@@ -8,6 +8,7 @@ import { useWalletStore } from "@/store/useWalletStore"
 import { connectWallet, disconnectWallet } from "@/lib/account/petra"
 import { useHippo } from "@/hooks/useHippo"
 import { usePanora } from "@/hooks/usePanora"
+import { useCallback, useEffect, useRef } from "react"
 
 export default function SwapCard() {
 
@@ -39,24 +40,30 @@ export default function SwapCard() {
       }
     };
 
-    const handleGetQuotes = async () =>{
+
+    const handleGetQuotes = useCallback(async () => {
         const hippoQuotes = await getHippoQuotes()
         const panoraQuotes = await getPanoraQuotes()
-
-        console.log('hippoQuotes :',hippoQuotes)
-
-        if(hippoQuotes.length === 0) return
+        if(hippoQuotes.length === 0) {
+            setOfferList([])
+            setBuyAmount(0)
+            return
+        }
         setBuyAmount(hippoQuotes[0].quote.outputUiAmt)
-        
+
         const offerList = [
-            ...toHippoOfferList(hippoQuotes), 
+            ...toHippoOfferList(hippoQuotes),
             ...(panoraQuotes ? toPanoraOfferList(panoraQuotes) : [])
         ].sort((a, b) => b.amount - a.amount)
-        
+
         console.log('offerList :',offerList)
 
         setOfferList(offerList)
-    }
+    }, [getHippoQuotes, sellAmount, setBuyAmount, setOfferList, toHippoOfferList])
+
+    useEffect(()=>{
+        handleGetQuotes()
+    }, [sellAmount])
 
     return (
         <Card className="bg-dark border-primary text-white min-w-[405px]">
@@ -66,10 +73,11 @@ export default function SwapCard() {
                                     <label className="text-sm">You sell</label>
                                     <div className="flex items-center space-x-2">
                                         <Input
-                                            type="text"
+                                            type="number"
                                             value={sellAmount}
-                                            onChange={(e) => {setSellAmount(e.target.value) 
-                                                handleGetQuotes()}}
+                                            onChange={(e) => {
+                                                setSellAmount(e.target.value)
+                                            }}
                                             className="flex-grow"
                                         />
                                         <Select value={sellToken?.symbol}
@@ -92,10 +100,10 @@ export default function SwapCard() {
                                     <label className="text-sm">You buy</label>
                                     <div className="flex items-center space-x-2">
                                         <Input
-                                            type="text"
+                                            type="number"
                                             value={buyAmount}
                                             onChange={(e) => {
-                                                setBuyAmount(e.target.value) 
+                                                setBuyAmount(e.target.value)
                                             }}
                                             className="flex-grow"
                                         />
