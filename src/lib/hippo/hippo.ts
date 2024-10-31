@@ -1,9 +1,10 @@
 import { AptosClient, HexString } from "aptos";
-import { TradeAggregator, MAINNET_CONFIG } from "@manahippo/hippo-sdk";
+import { TradeAggregator, MAINNET_CONFIG,  } from "@manahippo/hippo-sdk";
 import { CoinInfo } from "@hippo-sdk/coin-list";
+import { sendPayloadTx, TxnBuilderTypes } from "@manahippo/move-to-ts";
 
 // 1. Aggregator 생성
-export const createAggregator = async (fullNodeUrl?: 'https://fullnode.testnet.aptoslabs.com/') => {
+export const createAggregator = async (fullNodeUrl?: 'https://fullnode.mainnet.aptoslabs.com/') => {
   const netConf = { ...MAINNET_CONFIG };
   if (fullNodeUrl) {
     netConf.fullNodeUrl = fullNodeUrl;
@@ -25,6 +26,7 @@ export const getHippoQuotesApis = {
   async getBestQuote(agg: TradeAggregator, inputAmt: number, xInfo: CoinInfo, yInfo: CoinInfo) {
     console.log("로컬에서 최적 견적 가져오는 중...");
     const quote = await agg.getBestQuote(inputAmt, xInfo, yInfo);
+    console.log(quote, typeof quote);
     if (!quote) {
       console.log(`${xInfo.symbol}에서 ${yInfo.symbol}로의 견적을 찾을 수 없습니다`);
       return null;
@@ -36,6 +38,7 @@ export const getHippoQuotesApis = {
   async getAllQuotes(agg: TradeAggregator, inputAmt: number, xInfo: CoinInfo, yInfo: CoinInfo) {
     console.log("로컬에서 견적들 가져오는 중...");
     const quotes = await agg.getQuotes(inputAmt, xInfo, yInfo);
+    console.log("quotes: " + quotes, typeof quotes);
     if (quotes.length === 0) {
       console.log(`${xInfo.symbol}에서 ${yInfo.symbol}로의 견적을 찾을 수 없습니다`);
       return [];
@@ -70,7 +73,7 @@ export const getHippoQuotesApis = {
 export const createPayload = {
   // 기본 스왑 페이로드
   makeSwapPayload(quote: any, inputAmt: number) {
-    return quote.route.makeSwapPayload(inputAmt, 0);
+    return quote.route?.makeSwapPayload(inputAmt, 0);
   },
 
   // 고정 출력 스왑 페이로드
@@ -97,26 +100,26 @@ export const executeSwap = {
     routeIdx: number,
     account: any
   ) {
-    const {defaultAgg} = await createAggregator()
+    const agg = await createAggregator()
 
-    const netConf = defaultAgg.netConf;
-    const client = defaultAgg.client;
+    const netConf = agg.onchainAgg.netConf;
+    const client = agg.onchainAgg.client;
 
     const toAddressHex = new HexString(toAddress);
     const isSimulation = simulation === "true";
 
-    const agg = new TradeAggregator(client, netConf);
-    const xInfo = agg.coinListClient.getCoinInfoBySymbol(fromSymbol)[0];
-    const yInfo = agg.coinListClient.getCoinInfoBySymbol(toSymbol)[0];
+    const xInfo = agg.onchainAgg.coinListClient.getCoinInfoBySymbol(fromSymbol)[0];
+    const yInfo = agg.onchainAgg.coinListClient.getCoinInfoBySymbol(toSymbol)[0];
 
-    const quotes = await agg.getQuotes(inputAmt, xInfo, yInfo);
+    const quotes = await agg.onchainAgg.getQuotes(inputAmt, xInfo, yInfo);
     const quote = quotes[routeIdx];
     if (!quote) return;
 
     const maxGas = quote.route.gasUnits;
 
     const payload = createPayload.makeSwapPayload(quote.route, inputAmt);
-    const result = await agg.sendPayloadTxLocal(isSimulation, client, account, payload, maxGas);
+    // const result = sendPayloadTx(client, account, payload, maxGas);
+    const result = await sendPayloadTx(client, account, payload as TxnBuilderTypes.TransactionPayloadEntryFunction);
     console.log(result);
   }
 };

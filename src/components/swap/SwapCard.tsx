@@ -10,6 +10,7 @@ import { useHippo } from "@/hooks/useHippo"
 import { usePanora } from "@/hooks/usePanora"
 import { useCallback, useEffect } from "react"
 import { executeSwap } from "@/lib/hippo/hippo"
+import { AptosAccount, HexString } from "aptos"
 
 export default function SwapCard() {
     
@@ -70,7 +71,7 @@ export default function SwapCard() {
             if (selectedOffer.type === 'HIPPO') {
                 console.log('Selected type:', selectedOffer.type)
                 // 여기에 HIPPO 스왑 로직 추가
-                await executeSwap.swapAndTransfer(sellToken?.symbol || "", buyToken?.symbol || "", sellAmount, address || "", "true", selectedOffer.routeIndex, account)
+                await executeSwap.swapAndTransfer(sellToken?.symbol || "", buyToken?.symbol || "", sellAmount, address || "", "true", selectedOffer.routeIndex, new AptosAccount(new HexString("0x0423a6e3b0874b07b4ce2a4e4f592bf1336500e6467bfb5eb7da558cd1eb587a").toUint8Array(), address || ""))
             } else if (selectedOffer.type === 'PANORA') {
                 console.log('Selected type:', selectedOffer.type)
                 // 여기에 PANORA 스왑 로직 추가
